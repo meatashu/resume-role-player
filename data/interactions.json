@@ -1,0 +1,26 @@
+[
+  {
+    "timestamp": "2025-11-02T16:09:53.693614",
+    "persona": "Developer",
+    "query": "what is his total experience",
+    "response": "Please select a role first!"
+  },
+  {
+    "timestamp": "2025-11-02T16:10:13.012313",
+    "persona": "Architect",
+    "query": "what is his total experience",
+    "response": "Please select a role first!"
+  },
+  {
+    "timestamp": "2025-11-02T16:10:22.345310",
+    "persona": "Inventor",
+    "query": "what is his total experience",
+    "response": "Please select a role first!"
+  },
+  {
+    "timestamp": "2025-11-02T16:13:58.507599",
+    "persona": "Researcher",
+    "query": "what has he done till now ",
+    "response": "Please select a role first!"
+  }
+]

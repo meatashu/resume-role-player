@@ -1,0 +1,32 @@
+{
+  "projects": [
+    {
+      "name": "Enterprise Data Platform",
+      "role": "Lead Architect",
+      "description": "Designed and implemented a scalable data platform processing 10TB+ daily",
+      "technologies": [
+        "Python",
+        "Apache Kafka",
+        "Kubernetes",
+        "Machine Learning"
+      ],
+      "impact": "Reduced data processing time by 60% and improved accuracy by 35%"
+    },
+    {
+      "name": "AI-Powered Analytics Suite",
+      "role": "Technical Lead",
+      "description": "Built an innovative analytics platform using advanced AI/ML techniques",
+      "technologies": [
+        "Python",
+        "TensorFlow",
+        "React",
+        "GraphQL"
+      ],
+      "impact": "Increased user engagement by 45% and reduced analysis time by 70%"
+    },
+    {
+      "title": "implemented through a wsdl SOAP web service on Linux.\nSoftware Incubator",
+      "description": "AKGEC\nStudent Incharge\nAugust 2008 - July 2011 (3 years)\nProject Development & Management\nhttp://www.silive.in/\nSoftware Incubator is the research and development centre established within\nthe portals of Ajay Kumar Garg Engineering College. Software Incubator has\nset a foothold in the areas of software development, web-based enterprise\nsolutions, web application and website development. Software Incubator\nfocusses on high integrity and commitment, quality and rigor at every stage\nof work, passion for excellence, focus on customer satisfaction and an equal\nopportunity organization that motivates every member to work with passion\nand commitment. We lay emphasis on Quality Management for all activities\nthat we undertake."
+    }
+  ]
+}

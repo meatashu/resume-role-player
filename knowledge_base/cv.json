@@ -1,0 +1,48 @@
+{
+  "name": "Ashu - The Multipotentialite",
+  "experience": [
+    {
+      "title": "Principal Software Engineer",
+      "company": "Your Current Company",
+      "duration": "2020-Present",
+      "highlights": [
+        "Led architecture design for scalable systems",
+        "Mentored junior developers and tech leads",
+        "Invented novel software patterns for complex problems"
+      ]
+    },
+    {
+      "title": "",
+      "description": "patented technological"
+    }
+  ],
+  "skills": {
+    "languages": [
+      "Python",
+      "Java",
+      "JavaScript",
+      "TypeScript"
+    ],
+    "frameworks": [
+      "Spring Boot",
+      "React",
+      "Node.js"
+    ],
+    "cloud": [
+      "AWS",
+      "Azure",
+      "GCP"
+    ],
+    "specialties": [
+      "System Architecture",
+      "Machine Learning",
+      "Security"
+    ]
+  },
+  "education": {
+    "degree": "Master's in Computer Science",
+    "university": "Your University",
+    "year": "2015"
+  },
+  "summary": "{\n\""
+}
