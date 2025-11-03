@@ -20,6 +20,8 @@ from pathlib import Path
 import re
 import json
 from typing import List, Dict, Optional, Union
+from datetime import datetime
+from .dedup import DuplicateResolver
 
 # Optional dependencies (import inside functions to keep module import-safe when packages missing)
 
@@ -384,10 +386,82 @@ def _split_into_entries(section_text: str) -> List[Dict]:
 KB_DIR = Path(__file__).resolve().parents[1] / 'knowledge_base'
 
 
-def merge_into_kb(parsed: Dict, name_hint: Optional[str] = None) -> Dict:
-    """Merge parsed data into the knowledge_base JSON files.
-    Returns a summary dict of what was added.
+def merge_into_kb(new_content: Dict, name_hint: Optional[str] = None, dedup: bool = True) -> Dict:
+    """Merge new content into knowledge base files with optional deduplication.
+    
+    Args:
+        new_content: New content to merge
+        name_hint: Optional name to associate with content
+        dedup: Whether to deduplicate entries (default: True)
     """
+    resolver = DuplicateResolver() if dedup else None
+    current_time = datetime.now().isoformat()
+    result = {'added': {}, 'updated': {}, 'skipped': {}}
+    
+    def process_section(section_name: str, entries: List[Dict]) -> List[Dict]:
+        """Process a section with deduplication"""
+        if not entries:
+            return []
+            
+        # Add metadata to entries
+        for entry in entries:
+            if name_hint:
+                entry['name'] = name_hint
+            entry['timestamp'] = current_time
+        
+        # Load existing entries
+        kb_file = Path(f'knowledge_base/{section_name}.json')
+        existing_entries = []
+        if kb_file.exists():
+            with open(kb_file) as f:
+                existing_entries = json.load(f).get(section_name, [])
+        
+        # Deduplicate if enabled
+        if dedup and resolver:
+            # Track which entries were updated vs added
+            original_count = len(existing_entries)
+            merged = resolver.deduplicate_entries(existing_entries + entries)
+            new_count = len(merged)
+            
+            result['added'][section_name] = max(0, new_count - original_count)
+            result['updated'][section_name] = min(len(entries), original_count)
+            result['skipped'][section_name] = len(entries) - result['added'][section_name]
+            
+            return merged
+        else:
+            # Without dedup, just append
+            result['added'][section_name] = len(entries)
+            result['updated'][section_name] = 0
+            result['skipped'][section_name] = 0
+            return existing_entries + entries
+    
+    # Process each section
+    sections = ['experience', 'projects', 'patents', 'certifications']
+    for section in sections:
+        if new_content.get(section):
+            # Process and save section
+            processed = process_section(section, new_content[section])
+            kb_file = Path(f'knowledge_base/{section}.json')
+            kb_file.parent.mkdir(exist_ok=True)
+            with open(kb_file, 'w') as f:
+                json.dump({section: processed}, f, indent=2)
+    
+    # Handle summary separately (it's a string, not a list)
+    if new_content.get('summary'):
+        cv_file = Path('knowledge_base/cv.json')
+        cv_data = {}
+        if cv_file.exists():
+            with open(cv_file) as f:
+                cv_data = json.load(f)
+        cv_data['summary'] = new_content['summary']
+        if name_hint:
+            cv_data['name'] = name_hint
+        cv_data['last_updated'] = current_time
+        cv_file.parent.mkdir(exist_ok=True)
+        with open(cv_file, 'w') as f:
+            json.dump(cv_data, f, indent=2)
+    
+    return result
     summary = {'cv_added': 0, 'projects_added': 0, 'patents_added': 0, 'certs_added': 0}
 
     KB_DIR.mkdir(parents=True, exist_ok=True)
@@ -554,7 +628,8 @@ def ingest_files(
     file_paths: List[str], 
     linkedin_url: Optional[str] = None, 
     name_hint: Optional[str] = None,
-    use_staging: bool = True
+    use_staging: bool = True,
+    dedup: bool = True
 ) -> Dict:
     """Main entry point: extract, sanitize, parse and merge files and optional LinkedIn data.
 
@@ -563,6 +638,7 @@ def ingest_files(
         linkedin_url: Optional LinkedIn profile URL to scrape
         name_hint: Optional name to add to CV data
         use_staging: If True, write to staging area instead of direct merge
+        dedup: Whether to deduplicate entries (default: True)
 
     Returns:
         Dict with details of what was added and any warnings.
